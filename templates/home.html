@@ -1,9 +1,16 @@
 {% extends 'layout.html' %}
 {% block content %}
-<section class="hero_image">
-    <img src="/static/images/Camp-Nou-4.jpeg" alt="Camp Nou stadium">
-    <h1 class="hero_text">
-        European Football stadium
-    </h1>
-</section>
+<div class="hero">
+    <img class="hero-img" src="/static/images/Tottenham-Hotspur-Stadium.webp" alt="Tottenham Hotspur Stadium">
+    <h1 class="hero-text">European Football stadium</h1>
+</div>
+<div id="search-container">
+    <input type="text" id="search-input" placeholder="Search stadiums"/>
+</div>
+<class class="stadium">
+    {% for f in stadiums %}
+    <p>{{stadiums}}</p>
+    {% endfor %}
+
+</class>
 {% endblock %}
