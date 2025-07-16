@@ -7,10 +7,10 @@
 <div id="search-container">
     <input type="text" id="search-input" placeholder="Search stadiums"/>
 </div>
-<class class="stadium">
+<div class="button-container">
     {% for f in stadiums %}
-    <p>{{stadiums}}</p>
+        <a href="/football/{{f[0]}}"><button>{{f}}</button></a>
     {% endfor %}
+</div>
 
-</class>
 {% endblock %}
