@@ -11,7 +11,7 @@ app = Flask(__name__)
 def home():
     conn = sqlite3.connect("stadium.db")
     cur = conn.cursor()
-    cur.execute("SELECT Id, name FROM Stadium")
+    cur.execute("SELECT Id, name, image_path FROM Stadium")
     stadiums = cur.fetchall()
     conn.close()
     return render_template('home.html', title='HOME', stadiums = stadiums)
