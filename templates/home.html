@@ -2,17 +2,19 @@
 {% block content %}
 <div class="hero">
     <img class="hero-img" src="/static/images/Tottenham-Hotspur-Stadium.webp" alt="Tottenham Hotspur Stadium">
-    <h1 class="hero-text">European Football Stadiums</h1>
+    <h1 class="hero-text">Explore Europe's Greatest Stadiums</h1>
 </div>
 <div id="search-container">
     <input type="text" id="search-input" placeholder="Search stadiums"/>
 </div>
-<div class="button-container">
+<section class="card-grid">
     {% for f in stadiums %}
-        <a href="/football/{{f[0]}}"><img src="{{f[2]}}" alt="yo">
-        <button>{{f[1]}}</button></a>
-        <p>{{f[2]}}</p>
+        <div class="stadium-card">
+            <a href="/football/{{f[0]}}"><img src="{{f[2]}}" alt="no image">
+            <button>{{f[1]}}</button></a> <!--  Displays image and name as a button to custom stadiums page. -->
+            <p>{{f[2]}}</p>
+        </div>
     {% endfor %}
-</div>
+</section>
 
 {% endblock %}
