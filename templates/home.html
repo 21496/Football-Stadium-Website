@@ -2,19 +2,47 @@
 {% block content %}
 <div class="hero">
     <img class="hero-img" src="/static/images/Tottenham-Hotspur-Stadium.webp" alt="Tottenham Hotspur Stadium">
-    <h1 class="hero-text">Explore Europe's Greatest Stadiums</h1>
+    <h1 class="hero-text">Explore Europe's Greatest Stadiums</h1> <!-- hero image -->
 </div>
-<div id="search-container">
-    <input type="text" id="search-input" placeholder="Search stadiums"/>
+<div class="search">
+        <div class="search-icon material-symbols-outlined">search</div>
+        <input type="text" class="search-input" placeholder="Search" id="searchbar"/> <!-- Search bar -->
 </div>
 <section class="card-grid">
+    <p id="no-results" style="display: none;">No stadiums found</p>
     {% for f in stadiums %}
-        <div class="stadium-card">
-            <a href="/football/{{f[0]}}"><img src="{{f[2]}}" alt="no image">
-            <button>{{f[1]}}</button></a> <!--  Displays image and name as a button to custom stadiums page. -->
-            <p>{{f[2]}}</p>
+        <div class="stadium-card" data-name="{{f[1]}}">
+            <a href="/football/{{f[0]}}"><img src="{{f[2]}}" alt="no image" class="stadiumbutton">
+            <button>{{f[1]}}</button></a> <!-- Displays image and name as a button to stadiums page. -->
         </div>
     {% endfor %}
 </section>
 
+<script> // Searchbar java script
+document.addEventListener('DOMContentLoaded', function () {
+    const searchbar = document.getElementById('searchbar') // Get the search input from its ID
+    const stadiumCards = document.querySelectorAll('.stadium-card')
+    const noResults = document.getElementById('no-results') 
+
+    searchbar.addEventListener('input', function () { // Listening for the input 
+        const search_input = this.value.toLowerCase()
+        let anyVisible = false 
+        
+        stadiumCards.forEach(card => { // Loop each stadium to check if the name matchs the search
+            const stadiumName = card.getAttribute('data-name').toLowerCase()
+            if (stadiumName.includes(search_input)) {
+                card.style.display = 'block' // Hiding the card if it doesn't match the search
+                anyVisible = true
+            } else {
+                card.style.display = 'none'
+            }
+        })
+        if (anyVisible) { // Shows whether or not to display 'No stadiums found'
+            noResults.style.display = 'none'
+        } else {
+            noResults.style.display = 'block'
+        }
+    })
+})
+</script>
 {% endblock %}
