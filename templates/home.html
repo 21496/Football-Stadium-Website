@@ -8,7 +8,7 @@
         <div class="search-icon material-symbols-outlined">search</div>
         <input type="text" class="search-input" placeholder="Search" id="searchbar"/> <!-- Search bar -->
 </div>
-<section class="card-grid">
+<section class="three-card-grid">
     <p id="no-results" style="display: none;">No stadiums found</p>
     {% for f in stadiums %}
         <div class="stadium-card" data-name="{{f[1]}}">
@@ -17,7 +17,6 @@
         </div>
     {% endfor %}
 </section>
-
 <script> // Searchbar java script
 document.addEventListener('DOMContentLoaded', function () {
     const searchbar = document.getElementById('searchbar') // Get the search input from its ID

@@ -21,7 +21,7 @@ def home():
 def stadiums(Id):
     conn = sqlite3.connect("stadium.db")
     cur = conn.cursor()
-    cur.execute("SELECT Id, name, image_path FROM Stadium")
+    cur.execute("SELECT * FROM Stadium")
     stadiums = cur.fetchall()
     conn.close()
     return render_template("stadiums.html", stadiums = stadiums, Id = Id)
