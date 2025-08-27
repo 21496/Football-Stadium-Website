@@ -5,49 +5,52 @@
     <h1 class="hero-text">Explore Europe's Greatest Stadiums</h1> <!-- hero image -->
 </div>
 
-<div class="search">
+<div class="header">
+    <a href="/"><img src="/static/images/Logo.png" alt="logo" class="logo"></a>
+    <div class="search">
         <div class="search-icon material-symbols-outlined">search</div>
         <input type="text" class="search-input" placeholder="Search" id="searchbar"/> <!-- Search bar -->
+    </div>
 </div>
-<section class="three-card-grid">
+
+<div class="three-card-grid">
     <p id="no-results" style="display: none;">No stadiums found</p>
     {% for f in stadiums %}
+    <a href="/football/{{f[0]}}" class="stadium-card-text">
         <div class="stadium-card" data-name="{{f[1]}}">
-            <a href="/football/{{f[0]}}"><img src="{{f[2]}}" alt="no image" class="stadiumbutton">
-            <button>{{f[1]}}</button></a> <!-- Displays image and name as a button to stadiums page. -->
+            <img src="/static/images/cards/{{f[1]}}.png" alt="no image">
+            <p>{{f[1]}}</p> <!-- Displays image and name as a button to stadiums page. -->
         </div>
+    </a>
     {% endfor %}
-</section>
+</div>
 
 <div class="footer">
-    <p>Footer</p>
+    Explore the world's most iconic football stadiums
 </div>
 
 <script> // Searchbar java script
 document.addEventListener('DOMContentLoaded', function () {
-    const searchbar = document.getElementById('searchbar') // Get the search input from its ID
-    const stadiumCards = document.querySelectorAll('.stadium-card')
-    const noResults = document.getElementById('no-results') 
+    const searchbar = document.getElementById('searchbar')
+    const stadiumLinks = document.querySelectorAll('.stadium-card-text') // Get the search input from its ID
+    const noResults = document.getElementById('no-results')
 
-    searchbar.addEventListener('input', function () { // Listening for the input 
+    searchbar.addEventListener('input', function () {
         const search_input = this.value.toLowerCase()
-        let anyVisible = false 
-        
-        stadiumCards.forEach(card => { // Loop each stadium to check if the name matchs the search
-            const stadiumName = card.getAttribute('data-name').toLowerCase()
+        let anyVisible = false
+
+        stadiumLinks.forEach(link => { // Loop each stadium to check if the name matchs the search
+            const stadiumName = link.querySelector('.stadium-card').getAttribute('data-name').toLowerCase()
             if (stadiumName.includes(search_input)) {
-                card.style.display = 'block' // Hiding the card if it doesn't match the search
+                link.style.display = '' // Hiding the card if it doesn't match the search
                 anyVisible = true
             } else {
-                card.style.display = 'none'
+                link.style.display = 'none'; // Removes it from grid
             }
-        })
-        if (anyVisible) { // Shows whether or not to display 'No stadiums found'
-            noResults.style.display = 'none'
-        } else {
-            noResults.style.display = 'block'
-        }
-    })
-})
+        });
+
+        noResults.style.display = anyVisible ? 'none' : 'block'; // Shows whether or not to display 'No stadiums found'
+    });
+});
 </script>
 {% endblock %}

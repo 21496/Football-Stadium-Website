@@ -11,7 +11,7 @@ app = Flask(__name__)
 def home():
     conn = sqlite3.connect("stadium.db")
     cur = conn.cursor()
-    cur.execute("SELECT Id, name, image_path FROM Stadium")
+    cur.execute("SELECT Id, name FROM Stadium")
     stadiums = cur.fetchall()
     conn.close()
     return render_template('home.html', title='HOME', stadiums = stadiums)
@@ -21,7 +21,7 @@ def home():
 def stadiums(Id):
     conn = sqlite3.connect("stadium.db")
     cur = conn.cursor()
-    cur.execute("SELECT * FROM Stadium")
+    cur.execute("SELECT stadium.*, hometeam.*, location.* FROM hometeam INNER JOIN stadium ON hometeam.id = stadium.team_id INNER JOIN location ON location.id = stadium.Location;")
     stadiums = cur.fetchall()
     conn.close()
     return render_template("stadiums.html", stadiums = stadiums, Id = Id)
