@@ -7,7 +7,6 @@ from flask import Flask, render_template, abort
 app = Flask(__name__)
 
 
-
 @app.route('/')
 def home():
     conn = sqlite3.connect("stadium.db")
@@ -31,6 +30,7 @@ def stadiums(Id):
         return render_template("stadiums.html", stadiums = stadiums, Id = Id)
     except OverflowError:
         abort(404)
+
 
 @app.errorhandler(404)
 def http_error_handler(error):

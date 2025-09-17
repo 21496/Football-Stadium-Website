@@ -63,6 +63,47 @@
   margin: 0 auto;
 }
 
+.filter-toggle {
+    display: none;
+}
+
+.filter-button {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background 0.2s;
+}
+
+.filter-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.filter-options {
+    position: absolute;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.filter-toggle:checked + .filter-button + .filter-options {
+    max-height: 100px;
+    padding: 8px;
+}
+
+.filter-options select {
+    width: 150px;
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
 .three-card-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -91,9 +132,14 @@
   transform: translateY(-5px);
 }
 
-.stadium-card-text {
+.stadium-card-wrapper {
   color: black;
   text-decoration: none;
+}
+
+.no-results {
+  text-align: center; 
+  margin-top: 1rem;
 }
 
 .header {

@@ -2,24 +2,37 @@
 {% block content %}
 <div class="hero">
     <img class="hero-img" src="/static/images/Tottenham-Hotspur-Stadium.webp" alt="Tottenham Hotspur Stadium">
-    <h1 class="hero-text">Explore Europe's Greatest Stadiums</h1> <!-- hero image -->
+    <h1 class="hero-text">Explore Europe's Greatest Stadiums</h1> <!-- Hero image -->
 </div>
 
 <div class="header">
-    <a href="/"><img src="/static/images/Logo.png" alt="logo" class="logo"></a>
+    <a href="/"><img src="/static/images/Logo.png" alt="logo" class="logo"></a> <!-- Logo -->
     <div class="search">
         <div class="search-icon material-symbols-outlined">search</div>
-        <input type="text" class="search-input" placeholder="Search" id="searchbar"/> <!-- Search bar -->
+        <input type="text" class="search-input" placeholder="Search" id="searchbar"/> <!-- Search bar + icon -->
+    </div>
+    <div class="filter">
+        <input type="checkbox" id="filter-toggle" class="filter-toggle"> <!-- Hidden chackbox for filter -->
+        <label for="filter-toggle" class="filter-button">
+            <div class="material-symbols-outlined">filter_list</div> <!-- Filter icon -->
+        </label>
+        <div class="filter-options">
+            <select id="sort">
+                <option value="capacity">Capacity</option>
+                <option value="name">Alphabetical</option>
+            </select>
+        </div>
     </div>
 </div>
 
-<div class="three-card-grid">
-    <p id="no-results" style="display: none;">No stadiums found</p>
-    {% for f in stadiums %}
-    <a href="/football/{{f[0]}}" class="stadium-card-text">
-        <div class="stadium-card" data-name="{{f[1]}}">
-            <img src="/static/images/cards/{{f[1]}}.png" alt="no image">
-            <p>{{f[1]}}</p> <!-- Displays image and name as a button to stadiums page. -->
+<div class="three-card-grid" id="stadium-grid">
+    {% for stadium in stadiums %}
+    <a href="/football/{{stadium[0]}}" class="stadium-card-wrapper"
+       data-name="{{stadium[1]}}"
+       data-capacity="{{stadium[4]}}"> <!-- Allows search to be filtered -->
+        <div class="stadium-card">
+            <img src="/static/images/cards/{{stadium[1]}}.png" alt="no image">
+            <p>{{stadium[1]}}</p> <!-- Displays image and name as a button to stadiums page. -->
         </div>
     </a>
     {% endfor %}
@@ -29,28 +42,39 @@
     Explore the world's most iconic football stadiums
 </div>
 
-<script> // Searchbar java script
-document.addEventListener('DOMContentLoaded', function () {
-    const searchbar = document.getElementById('searchbar')
-    const stadiumLinks = document.querySelectorAll('.stadium-card-text') // Get the search input from its ID
-    const noResults = document.getElementById('no-results')
+<script>
+document.addEventListener('DOMContentLoaded', function () { //Waits for the page to be fully loaded
+    const searchbar = document.getElementById('searchbar');
+    const sortSelect = document.getElementById('sort');
+    const grid = document.getElementById('stadium-grid');
+    const stadiumLinks = Array.from(document.querySelectorAll('.stadium-card-wrapper'));
+    const noResults = document.getElementById('no-results');
 
-    searchbar.addEventListener('input', function () {
-        const search_input = this.value.toLowerCase()
-        let anyVisible = false
+    function filterAndSort() {
+        const searchInput = searchbar ? searchbar.value.toLowerCase() : "";
+        const sortBy = sortSelect.value; //sorts by either capacity or alphabet
 
-        stadiumLinks.forEach(link => { // Loop each stadium to check if the name matchs the search
-            const stadiumName = link.querySelector('.stadium-card').getAttribute('data-name').toLowerCase()
-            if (stadiumName.includes(search_input)) {
-                link.style.display = '' // Hiding the card if it doesn't match the search
-                anyVisible = true
+        let visibleStadiums = stadiumLinks.filter(link => { //Filters cards
+            const stadiumName = (link.dataset.name || "").toLowerCase();
+            const match = stadiumName.includes(searchInput);
+            link.style.display = match ? '' : 'none'; //Hides the stadium cards that don't match
+            return match;
+        });
+        visibleStadiums.sort((a, b) => { //Sorts the cards by always ascending
+            if (sortBy === "capacity") { //converts capacity into numbers
+                const aCap = Number(a.dataset.capacity) || 0;
+                const bCap = Number(b.dataset.capacity) || 0;
+                return aCap - bCap; 
             } else {
-                link.style.display = 'none'; // Removes it from grid
+                return a.dataset.name.localeCompare(b.dataset.name); //Alphabeticaly sorts name
             }
         });
-
-        noResults.style.display = anyVisible ? 'none' : 'block'; // Shows whether or not to display 'No stadiums found'
-    });
+        visibleStadiums.forEach(card => grid.appendChild(card)); //Shows correct cards
+        noResults.style.display = visibleStadiums.length ? 'none' : 'block'; //Shows "no results" message
+    }
+    if (searchbar) searchbar.addEventListener('input', filterAndSort); 
+    sortSelect.addEventListener('change', filterAndSort); 
+    filterAndSort(); //Event listener which waits for the page to be fully loaded then runs the function
 });
 </script>
 {% endblock %}
