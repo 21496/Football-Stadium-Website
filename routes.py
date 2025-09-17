@@ -1,10 +1,11 @@
 import sqlite3
 
 
-from flask import Flask, render_template
+from flask import Flask, render_template, abort
 
 
 app = Flask(__name__)
+
 
 
 @app.route('/')
@@ -19,13 +20,24 @@ def home():
 
 @app.route("/football/<int:Id>")
 def stadiums(Id):
-    conn = sqlite3.connect("stadium.db")
-    cur = conn.cursor()
-    cur.execute("SELECT stadium.*, hometeam.*, location.* FROM hometeam INNER JOIN stadium ON hometeam.id = stadium.team_id INNER JOIN location ON location.id = stadium.Location;")
-    stadiums = cur.fetchall()
-    conn.close()
-    return render_template("stadiums.html", stadiums = stadiums, Id = Id)
+    try:
+        conn = sqlite3.connect("stadium.db")
+        cur = conn.cursor()
+        cur.execute("SELECT stadium.*, hometeam.*, location.* FROM hometeam INNER JOIN stadium ON hometeam.id = stadium.team_id INNER JOIN location ON location.id = stadium.Location WHERE stadium.Id=?", (Id,))
+        stadiums = cur.fetchone()
+        conn.close()
+        if stadiums is None:
+            abort(404)
+        return render_template("stadiums.html", stadiums = stadiums, Id = Id)
+    except OverflowError:
+        abort(404)
+
+@app.errorhandler(404)
+def http_error_handler(error):
+    return render_template("404.html"), 404
 
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
