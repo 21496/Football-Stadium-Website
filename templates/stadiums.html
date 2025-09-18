@@ -51,6 +51,50 @@
         <iframe src="{{stadiums[15]}}" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
 
+    <section class="leave-a-review">
+        <h3>Reviews</h3>
+        {% if reviews %}
+        {% for review in reviews %}
+        <div class="review">
+            <h4>{{review[1]}}:</h4>
+            <p>{{review[2]}}</p>
+            {% if admin %}
+            <form method="POST" style="display:inline;">
+            <input type="hidden" name="delete_review_id" value="{{review[0]}}">
+            <button type="submit" style="color:red; background-color: white;">Delete</button> <!-- Delete button -->
+            </form>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% else %}
+        <p style="padding: 20px; margin: 1rem;">No reviews yet. Be the first to leave one</p>
+        {% endif %}
+
+        <div class="add-review"> <!-- Review form -->
+        <h3>Leave a Review</h3>
+        <form method="POST">
+            <input type="text" name="name" placeholder="Your Name">
+            <textarea name="review" rows="4" placeholder="Your Review" required></textarea>
+            <button type="submit">Submit</button>
+        </form>
+        </div>
+
+        {% if not admin %}
+        <div class="admin-login"> <!-- Admin login/logout -->
+        <h3>Admin Login</h3>
+        <form method="POST">
+            <input type="password" name="password" placeholder="Enter password" required>
+            <button type="submit">Login</button>
+        </form>
+        </div>
+        {% else %}
+        <form method="POST" style="margin-left: 16px;">
+        <button type="submit" name="logout">Logout Admin</button>
+        </form>
+        <p style="margin: 16px;">You are logged in as an admin. You can delete the reviews above</p>
+        {% endif %}
+    </section>
+
     <div class="footer">
         Explore the world's most iconic football stadiums
     </div>

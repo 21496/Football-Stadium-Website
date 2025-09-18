@@ -38,8 +38,12 @@
     {% endfor %}
 </div>
 
+<div class="no-results">
+    <p>No stadiums found</p>
+</div>
+
 <div class="footer">
-    Explore the world's most iconic football stadiums
+    <p>the world's most iconic football stadiums</p>
 </div>
 
 <script>
@@ -48,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () { //Waits for the page
     const sortSelect = document.getElementById('sort');
     const grid = document.getElementById('stadium-grid');
     const stadiumLinks = Array.from(document.querySelectorAll('.stadium-card-wrapper'));
-    const noResults = document.getElementById('no-results');
+    const noResults = document.querySelector('.no-results'); 
 
     function filterAndSort() {
         const searchInput = searchbar ? searchbar.value.toLowerCase() : "";
