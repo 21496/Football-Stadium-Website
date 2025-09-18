@@ -12,7 +12,7 @@ app.secret_key = b'\x8f\xa3\x19\xcd\x5f\x91\x72\x4e\xab\x2d\x0c\x6b\xde\x94\x21\
 def home():
     conn = sqlite3.connect("stadium.db")
     cur = conn.cursor()
-    cur.execute("SELECT Id, name FROM Stadium")
+    cur.execute("SELECT stadium_Id, name FROM Stadium")
     stadiums = cur.fetchall()
     conn.close()
     return render_template('home.html', title='HOME', stadiums = stadiums)
@@ -21,8 +21,9 @@ def home():
 @app.route("/football/<int:Id>", methods=["GET", "POST"]) # Show a specific stadium page, with detials and reviews
 def stadiums(Id):
     conn = sqlite3.connect("stadium.db")
-    cur = conn.cursor() # Fetchs the specific stadium details with hometeam and location info
-    cur.execute("SELECT stadium.*, hometeam.*, location.* FROM hometeam INNER JOIN stadium ON hometeam.id = stadium.team_id INNER JOIN location ON location.id = stadium.Location WHERE stadium.Id=?", (Id,))
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor() # Fetchs the specific stadium details with teams and country info by joining the tables together in one query
+    cur.execute("SELECT stadium.*, teams.*, country.Stadium_country AS Country_Name FROM stadium INNER JOIN teams ON teams.Team_Id = stadium.Team_Id INNER JOIN country ON country.Country_Id = stadium.Country_Id WHERE stadium.Stadium_Id = ?;", (Id,))
     stadiums = cur.fetchone()
     if stadiums is None:
         conn.close()
@@ -30,14 +31,14 @@ def stadiums(Id):
     if request.method == "POST": # Review submission
         if "password" in request.form: 
             password = request.form.get("password", "")
-            cur.execute("SELECT password FROM admin WHERE id=1")
+            cur.execute("SELECT password FROM admin WHERE admin_id=1")
             stored_password = cur.fetchone()[0]
             if password == stored_password:
                 session["admin"] = True # Admin login
 
         elif "delete_review_id" in request.form and session.get("admin"): # Delete review
             review_id = int(request.form["delete_review_id"])
-            cur.execute("DELETE FROM reviews WHERE id=?", (review_id,))
+            cur.execute("DELETE FROM reviews WHERE reviews_id=?", (review_id,))
             conn.commit()
 
         elif "review" in request.form: # Add new review
@@ -52,10 +53,15 @@ def stadiums(Id):
 
         return redirect(url_for("stadiums", Id=Id))
 
-    cur.execute("SELECT id, name, review FROM reviews WHERE stadium_id=? ORDER BY id DESC", (Id,))
+    cur.execute("SELECT Reviews_id, name, review FROM reviews WHERE stadium_id=? ORDER BY reviews_id DESC;", (Id,))
     reviews = cur.fetchall() # Fetch reviews for the stadium
+    
+
+    country_id = stadiums["Country_Id"] # Find stadiums in the same country
+    cur.execute("SELECT stadium.Stadium_Id, stadium.name, country.Stadium_country FROM stadium INNER JOIN country ON stadium.Country_Id = country.Country_Id WHERE stadium.Country_Id = ? AND stadium.Stadium_Id != ?;", (country_id, Id))
+    other_stadiums = cur.fetchall()
     conn.close()
-    return render_template("stadiums.html", stadiums=stadiums, Id=Id, reviews=reviews, admin=session.get("admin", False))
+    return render_template("stadiums.html", stadiums=stadiums, Id=Id, reviews=reviews, other_stadiums=other_stadiums, admin=session.get("admin", False))
 
 
 @app.errorhandler(404)

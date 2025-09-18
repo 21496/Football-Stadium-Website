@@ -234,6 +234,21 @@
   border-radius: 10px;
 }
 
+.other-stadiums li a {
+  text-decoration: none;
+  color: black;
+}
+
+.other-stadiums {
+  list-style: none;
+  padding-left: 0;
+}
+
+.other-stadiums li a:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
 .team-name {
   color: white;
   display: flex;
@@ -249,11 +264,6 @@
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   border-radius: 10px;
   margin: 1rem;
-}
-
-h2, h3 {
-  text-align: center;
-  padding: 8px;
 }
 
 .review, .add-review, .admin-login{

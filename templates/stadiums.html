@@ -30,13 +30,25 @@
         </div>
         <div class="info-card">
             <h2>{{stadiums[1]}}</h2>
-            <p style="color: grey;">{{stadiums[13]}} - {{stadiums[14]}}</p>
+            <p style="color: grey;">{{stadiums[14]}} - {{stadiums[9]}}</p>
             <p>Capacity: {{stadiums[3]}} seats</p>
             <p>Address: {{stadiums[4]}}</p>
             <p>Year Opened: {{stadiums[6]}}</p><br>
             <h4>{{stadiums[9]}}</h4>
-            <p>League: {{stadiums[11]}}</p>
-            <p>Manager: {{stadiums[10]}}</p>
+            <p>League: {{stadiums[13]}}</p>
+            <p>Manager: {{stadiums[12]}}</p>
+            <div class="Country-stadiums">
+                {% if other_stadiums %}
+                <h4><br>Stadiums in the same country:</h4>
+                <ul class="other-stadiums">
+                    {% for s in other_stadiums %}
+                    <li><a style="color: black; " href="{{url_for('stadiums', Id=s['Stadium_Id'])}}">{{s['name']}}</a></li>
+                    {% endfor %} <!-- Shows stadiums in the same country and links them -->
+                </ul>
+                {% else %}
+                <p>No other stadiums in this country</p>
+                {% endif %}
+            </div>
         </div>
     </section>
 
@@ -48,11 +60,11 @@
     <div class="map">
         <h4>Explore the stadium: </h4>
         <br>
-        <iframe src="{{stadiums[15]}}" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <iframe src="{{stadiums[8]}}" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
 
     <section class="leave-a-review">
-        <h3>Reviews</h3>
+        <h3 style="text-align: center; padding: 8px;">Reviews</h3>
         {% if reviews %}
         {% for review in reviews %}
         <div class="review">
@@ -71,10 +83,10 @@
         {% endif %}
 
         <div class="add-review"> <!-- Review form -->
-        <h3>Leave a Review</h3>
+        <h3 style="text-align: center; padding: 8px;">Leave a Review</h3>
         <form method="POST">
-            <input type="text" name="name" placeholder="Your Name">
-            <textarea name="review" rows="4" placeholder="Your Review" required></textarea>
+            <input type="text" name="name" maxlength="25" placeholder="Your Name" >
+            <textarea name="review" rows="4" maxlength="100" placeholder="Your Review" required ></textarea>
             <button type="submit">Submit</button>
         </form>
         </div>
@@ -83,7 +95,7 @@
         <div class="admin-login"> <!-- Admin login/logout -->
         <h3>Admin Login</h3>
         <form method="POST">
-            <input type="password" name="password" placeholder="Enter password" required>
+            <input type="password" name="password" maxlength="15" placeholder="Enter password" required>
             <button type="submit">Login</button>
         </form>
         </div>
